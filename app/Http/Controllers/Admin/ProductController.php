@@ -35,10 +35,10 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name_en' => 'required',
-            'name_ar' => 'required',
-            'description_en' => 'required',
-            'description_ar' => 'required',
+            'name_ar' => 'required|regex:/^[\p{Arabic}\d\s\p{P}]+$/u',
+            'description_ar' => 'required|regex:/^[\p{Arabic}\d\s\p{P}]+$/u',
+            'name_en' => 'required|regex:/^[A-Za-z\d\s\p{P}]+$/',
+            'description_en' => 'required|regex:/^[A-Za-z\d\s\p{P}]+$/',
             'price' => 'required',
             'quantity' => 'required',
             'category_id' => 'nullable|exists:categories,id',
@@ -118,10 +118,10 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'name_en' => 'required',
-            'name_ar' => 'required',
-            'description_en' => 'required',
-            'description_ar' => 'required',
+            'name_ar' => 'required|regex:/^[\p{Arabic}\d\s\p{P}]+$/u',
+            'description_ar' => 'required|regex:/^[\p{Arabic}\d\s\p{P}]+$/u',
+            'name_en' => 'required|regex:/^[A-Za-z\d\s\p{P}]+$/',
+            'description_en' => 'required|regex:/^[A-Za-z\d\s\p{P}]+$/',
             'price' => 'required',
             'quantity' => 'required|integer',
             'category_id' => 'nullable|exists:categories,id',

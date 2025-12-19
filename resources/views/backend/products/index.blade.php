@@ -9,7 +9,6 @@
                             <th>#</th>
                             <th>{{ __('Name') }}</th>
                             <th>{{ __('Image') }}</th>
-                            <th>{{ __('Description') }}</th>
                             <th>{{ __('Price') }}</th>
                             <th>{{ __('Quantity') }}</th>
                             <th>{{ __('Category') }}</th>
@@ -24,7 +23,6 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $product->trans_name }}</td>
                                 <td><img src="{{ $product->img_path }}" alt="" width="80"></td>
-                                <td>{{ $product->trans_description }}</td>
                                 <td>{{ $product->price }}</td>
                                 <td>{{ $product->quantity }}</td>
                                 <td>{{ $product->category->trans_name }}</td>
@@ -36,11 +34,11 @@
                                         <i class="fas fa-edit"></i>
                                     </a>
 
-                                    <form action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                    <form id="delete-form-{{$product->id}}" action="{{ route('products.destroy', $product->id) }}" method="POST"
                                         class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm btn-danger mx-1" title="Delete">
+                                        <button onclick="confirmDelete({{$product->id}})" type="button" class="btn btn-sm btn-danger mx-1" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
@@ -56,31 +54,29 @@
         </div>
     </div>
     @push('js')
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            const form = document.getElementById("myForm");
-            form.addEventListener("submit", function(event) {
-                event.preventDefault();
-
+            function confirmDelete(id) {
                 Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
+                    title: "{{__('Are you sure?')}}",
+                    text: "{{__('You wont be able to revert this!')}}",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#34495e",
+                    confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
+                    confirmButtonText: "{{__('Yes, delete it!')}}",
+                    cancelButtonText: "{{__('Cancel')}}"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        form.submit();
                         Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
+                            title: "{{__('Deleted!')}}",
+                            text: "{{__('Your file has been deleted.')}}",
                             icon: "success"
                         });
+                        document.getElementById('delete-form-' + id).submit();
                     }
                 });
-            });
+            }
         </script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @endpush
 </x-layout>

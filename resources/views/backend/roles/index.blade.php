@@ -21,25 +21,25 @@
                                     <span class="badge bg-primary text-white">{{ $permission->name }}</span>
                                 @endforeach
                             </td>
-                            <td class="actions d-flex align-items-center gap-2">
-                                <div>
-                                    <a href="{{ route('roles.edit', $role) }}"
-                                        class="btn btn-sm btn-primary d-flex align-items-center justify-content-center"
-                                        title="Edit">
-                                        <i class="fas fa-edit"></i></a>
-                                </div>
-                                <div>
-                                    <form id="myForm" action="{{ route('roles.destroy', $role->id) }}" method="POST"
-                                        class="m-0 p-0">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button
-                                            class="btn btn-sm btn-danger d-flex align-items-center justify-content-center"
-                                            title="Delete">
-                                            <i class="fas fa-trash"></i></button>
-                                    </form>
-                                </div>
+                            <td>
+                                <a href="{{ route('roles.edit', $role) }}"
+                                    class="btn btn-sm btn-primary d-flex align-items-center justify-content-center ml-2"
+                                    title="Edit">
+                                    <i class="fas fa-edit"></i></a>
+
+
+                                <form id="myForm" action="{{ route('roles.destroy', $role->id) }}" method="POST"
+                                    class="m-0 p-0">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button onclick="confirmDelete({{ $role->id }})" type="button"
+                                        class="btn btn-sm btn-danger d-flex align-items-center justify-content-center"
+                                        title="Delete">
+                                        <i class="fas fa-trash"></i></button>
+                                </form>
+
                             </td>
+
                         @empty
                             <td class="text-center" colspan="6">{{ __('No roles') }}</td>
                         </tr>
@@ -49,31 +49,29 @@
         </div>
     </div>
     @push('js')
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            const form = document.getElementById("myForm");
-            form.addEventListener("submit", function(event) {
-                event.preventDefault();
-
+            function confirmDelete(id) {
                 Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
+                    title: "{{ __('Are you sure?') }}",
+                    text: "{{ __('You wont be able to revert this!') }}",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#34495e",
+                    confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
+                    confirmButtonText: "{{ __('Yes, delete it!') }}",
+                    cancelButtonText: "{{ __('Cancel') }}"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        form.submit();
                         Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
+                            title: "{{ __('Deleted!') }}",
+                            text: "{{ __('Your file has been deleted.') }}",
                             icon: "success"
                         });
+                        document.getElementById('delete-form-' + id).submit();
                     }
                 });
-            });
+            }
         </script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @endpush
 </x-layout>

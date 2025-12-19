@@ -83,3 +83,11 @@ textarea {
 .page-item .page-link {
     color: #34495e !important;
 }
+
+.text-primary {
+    color: #34495e !important;
+}
+
+.border-left-primary {
+    border-left: .25rem solid #34495e !important;
+}

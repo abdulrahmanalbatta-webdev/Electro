@@ -32,11 +32,12 @@
                                         <i class="fas fa-edit"></i>
                                     </a>
 
-                                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
+                                    <form id="delete-form-{{ $category->id }}" action="{{ route('categories.destroy', $category->id) }}" method="POST"
                                         class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm btn-danger mx-1" title="Delete">
+                                        <button onclick="confirmDelete({{$category->id}})" type="button"
+                                            class="btn btn-sm btn-danger mx-1" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
@@ -52,31 +53,29 @@
         </div>
     </div>
     @push('js')
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            const form = document.getElementById("myForm");
-            form.addEventListener("submit", function(event) {
-                event.preventDefault();
-
+            function confirmDelete(id) {
                 Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
+                    title: "{{__('Are you sure?')}}",
+                    text: "{{__('You wont be able to revert this!')}}",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#34495e",
+                    confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
+                    confirmButtonText: "{{__('Yes, delete it!')}}",
+                    cancelButtonText: "{{__('Cancel')}}"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        form.submit();
                         Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
+                            title: "{{__('Deleted!')}}",
+                            text: "{{__('Your file has been deleted.')}}",
                             icon: "success"
                         });
+                        document.getElementById('delete-form-' + id).submit();
                     }
                 });
-            });
+            }
         </script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @endpush
 </x-layout>

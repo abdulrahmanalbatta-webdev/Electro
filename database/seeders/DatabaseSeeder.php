@@ -17,22 +17,30 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Super Admin',
-            'email' => 'admin@example.com',
-            'password' => 'admin@123',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Super Admin',
+        //     'email' => 'admin@example.com',
+        //     'password' => 'admin@123',
+        // ]);
 
-        User::factory()->create([
-            'name' => 'Employee',
-            'email' => 'employee@example.com',
-            'password' => 'employee@123',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Employee',
+        //     'email' => 'employee@example.com',
+        //     'password' => 'employee@123',
+        // ]);
 
-        User::factory()->create([
-            'name' => 'Customer',
-            'email' => 'cutomer@example.com',
-            'password' => 'customer@123',
+        // User::factory()->create([
+        //     'name' => 'Customer',
+        //     'email' => 'cutomer@example.com',
+        //     'password' => 'customer@123',
+        // ]);
+
+        // $this->call([
+        //     RolesAndPermissionsSeeder::class,
+        // ]);
+
+        $this->call([
+            OrdersTableSeeder::class,
         ]);
     }
 }

@@ -16,6 +16,6 @@ class Order extends Model
 
     function order_items()
     {
-        return $this->hasMany(OrderItems::class)->withDefault();
+        return $this->hasMany(OrderItems::class);
     }
 }

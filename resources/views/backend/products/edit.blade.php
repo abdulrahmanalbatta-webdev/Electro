@@ -85,9 +85,8 @@
 
                                                 <button onclick="deleteImg(event, {{ $img->id }})" type="button"
                                                     class="btn btn-danger btn-sm position-absolute top-0 end-0 translate-middle d-flex justify-content-center align-items-center"
-                                                    style="width: 24px; height: 24px; border-radius: 50%; padding: 0;">
-                                                    <span class="fw-bold"
-                                                        style="font-size: 12px; line-height: 0;">×</span>
+                                                    style="width: 24px; height: 24px; padding: 0;">
+                                                            <i class="fa-solid fa-xmark"></i>
                                                 </button>
 
 

@@ -16,6 +16,9 @@
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css">
 
 
@@ -111,8 +114,8 @@
             </li>
 
             <!-- Orders -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('dashboard') }}">
+            <li class="nav-item {{ request()->routeIs('orders.index') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('orders.index') }}">
                     <i class="fas fa-truck"></i>
 
                     <span>{{ __('Orders') }}</span>
@@ -120,8 +123,8 @@
             </li>
 
             <!-- Payments -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('dashboard') }}">
+            <li class="nav-item {{ request()->routeIs('payments') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('payments') }}">
                     <i class="fas fa-dollar-sign"></i>
 
                     <span>{{ __('Payments') }}</span>
@@ -267,7 +270,7 @@
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown">
                                 <h6 class="dropdown-header">
-                                    Alerts Center
+                                    Notifications
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="mr-3">
@@ -303,8 +306,9 @@
                                         Spending Alert: We've noticed unusually high spending for your account.
                                     </div>
                                 </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All
-                                    Alerts</a>
+                                <a class="dropdown-item text-center small text-gray-500"
+                                    href="{{ route('notifications') }}">Show All
+                                    Notifications</a>
                             </div>
                         </li>
 
@@ -387,7 +391,7 @@
                                         $src = 'https://ui-avatars.com/api/?name=' . Auth::user()->name;
                                     }
                                 @endphp
-                                <img class="img-profile rounded-circle" src="{{ $src }}">
+                                <img class="img-profile rounded-circle mr-2" src="{{ $src }}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

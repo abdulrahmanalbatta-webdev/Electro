@@ -36,7 +36,7 @@ class UserController extends Controller
 
         User::create($data);
 
-        flash()->success('User created successfully');
+        flash()->success("{{__('User created successfully')}}");
         return redirect()->route('users.index');
     }
 
@@ -71,7 +71,7 @@ class UserController extends Controller
 
         $user->update($data);
 
-        flash()->success('User updated successfully');
+        flash()->success("{{__('User updated successfully')}}");
         return redirect()->route('users.index');
     }
 
@@ -82,7 +82,7 @@ class UserController extends Controller
     {
         $user->delete();
 
-        flash()->success('User deleted successfully');
+        flash()->success("{{__('User deleted successfully')}}");
         return redirect()->back();
     }
 }

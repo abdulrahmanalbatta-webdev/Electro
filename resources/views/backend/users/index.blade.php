@@ -6,7 +6,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        {{-- <th>Image</th> --}}
+                        <th>Image</th>
                         <th>{{ __('Name') }}</th>
                         <th>{{ __('Email') }}</th>
                         <th>{{ __('Type') }}</th>
@@ -19,30 +19,37 @@
                     @forelse ($users as $user)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            {{-- <td>{{ $user->image() }}</td> --}}
+                            @php
+                                if (isset($user->image->path)) {
+                                    $src = asset('images/' . $user->image->path);
+                                } else {
+                                    $src =
+                                        'https://ui-avatars.com/api/?name=' .
+                                        urlencode($user->name) .
+                                        '&background=random&size=128';
+                                }
+                            @endphp
+                            <td><img src="{{ $src }}" alt="user-photo"
+                                    style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"></td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->type }}</td>
                             <td>{{ $user->created_at->diffForHumans() }}</td>
                             <td>{{ $user->updated_at->diffForHumans() }}</td>
-                            <td class="actions d-flex align-items-center gap-2">
-                                <div>
-                                    <a href="{{ route('users.edit', $user) }}"
-                                        class="btn btn-sm btn-primary d-flex align-items-center justify-content-center"
-                                        title="Edit">
-                                        <i class="fas fa-edit"></i></a>
-                                </div>
-                                <div>
-                                    <form id="myForm" action="{{ route('users.destroy', $user->id) }}" method="POST"
-                                        class="m-0 p-0">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button
-                                            class="btn btn-sm btn-danger d-flex align-items-center justify-content-center"
-                                            title="Delete">
-                                            <i class="fas fa-trash"></i></button>
-                                    </form>
-                                </div>
+                            <td class="actions">
+                                <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-primary" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                                <form id="delete-form-{{ $user->id }}"
+                                    action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button onclick="confirmDelete({{ $user->id }})" type="button"
+                                        class="btn btn-sm btn-danger mx-1" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </td>
                         @empty
                             <td class="text-center" colspan="6">{{ __('No users') }}</td>
@@ -53,31 +60,29 @@
         </div>
     </div>
     @push('js')
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            const form = document.getElementById("myForm");
-            form.addEventListener("submit", function(event) {
-                event.preventDefault();
-
+            function confirmDelete(id) {
                 Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
+                    title: "{{ __('Are you sure?') }}",
+                    text: "{{ __('You wont be able to revert this!') }}",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#34495e",
+                    confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
+                    confirmButtonText: "{{ __('Yes, delete it!') }}",
+                    cancelButtonText: "{{ __('Cancel') }}"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        form.submit();
                         Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
+                            title: "{{ __('Deleted!') }}",
+                            text: "{{ __('Your file has been deleted.') }}",
                             icon: "success"
                         });
+                        document.getElementById('delete-form-' + id).submit();
                     }
                 });
-            });
+            }
         </script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @endpush
 </x-layout>

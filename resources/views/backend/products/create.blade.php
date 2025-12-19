@@ -35,10 +35,10 @@
                                     </div>
                                 </div>
                                 <div class="mb-4">
-                                    <label>Category</label>
+                                    <label>{{ __('Category') }}</label>
                                     <select name="category_id"
                                         class="form-control @error('category') is-invalid @enderror">
-                                        <option value="" disabled selected>Select category</option>
+                                        <option value="" disabled selected>{{ __('Select category') }}</option>
                                         @forelse ($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->trans_name }}</option>
                                         @empty

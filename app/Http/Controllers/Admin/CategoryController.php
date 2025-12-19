@@ -33,8 +33,10 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name_en' => 'required',
-            'name_ar' => 'required',
+            'name_ar' => 'required|regex:/^[\p{Arabic}\d\s\p{P}]+$/u',
+            'description_ar' => 'required|regex:/^[\p{Arabic}\d\s\p{P}]+$/u',
+            'name_en' => 'nullable|regex:/^[A-Za-z\d\s\p{P}]+$/',
+            'description_en' => 'nullable|regex:/^[A-Za-z\d\s\p{P}]+$/',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -92,8 +94,10 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $request->validate([
-            'name_en' => 'required',
-            'name_ar' => 'required',
+            'name_ar' => 'required|regex:/^[\p{Arabic}\d\s\p{P}]+$/u',
+            'description_ar' => 'required|regex:/^[\p{Arabic}\d\s\p{P}]+$/u',
+            'name_en' => 'nullable|regex:/^[A-Za-z\d\s\p{P}]+$/',
+            'description_en' => 'nullable|regex:/^[A-Za-z\d\s\p{P}]+$/',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -146,7 +150,7 @@ class CategoryController extends Controller
         $category->image()->delete();
         $category->delete();
 
-        $category->flash()->success(__("Category deleted successfully"));
+        flash()->success(__("Category deleted successfully"));
         return redirect()->back();
     }
 }
