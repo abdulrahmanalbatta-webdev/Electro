@@ -66,7 +66,12 @@ class OrderController extends Controller
         return redirect()->route('orders.index');
     }
 
-    public function change_status() {
-       dd(1213);
+    public function change_status(Order $order, $status) {
+        $order->update(['status' => $status]);
+        return response()->json([
+            'success' => true,
+            'order_id' => $order->id,
+            'status' => $status
+        ]);
     }
 }

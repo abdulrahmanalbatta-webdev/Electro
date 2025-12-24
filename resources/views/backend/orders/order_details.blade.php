@@ -3,7 +3,7 @@
         <div class="col-md-6">
             <h1 class="h3 mb-4 text-gray-800">{{ __('Order Details') }}</h1>
         </div>
-        <div class="col-md-6 text-left">
+        <div class="col-md-6 text-right">
             <a href="{{ route('orders.index') }}" class="btn btn-secondary">{{ __('Back to Orders') }}</a>
         </div>
     </div>
@@ -19,17 +19,16 @@
                     <p><strong>{{ __('Order ID') }}:</strong> {{ $order->id }}</p>
                     <p><strong>{{ __('Customer') }}:</strong> {{ $order->user->name }}</p>
                     <p><strong>{{ __('Email') }}:</strong> {{ $order->user->email }}</p>
-                    <form onchange="change_status(event)" action="{{route('change_status')}}" method="POST">
-                        <p><strong>{{ __('Status') }}:</strong>
-                            <select class="form-control" name="status" id="status">
-                                <option value="pending" @selected('pending' === $order->status)>pending</option>
-                                <option value="processing" @selected('processing' === $order->status)>processing</option>
-                                <option value="shipped" @selected('shipped' === $order->status)>shipped</option>
-                                <option value="delivered" @selected('delivered' === $order->status)>delivered</option>
-                                <option value="cancelled" @selected('cancelled' === $order->status)>cancelled</option>
-                            </select>
-                        </p>
-                    </form>
+                    <p><strong>{{ __('Status') }}:</strong>
+                        <select onchange="change_status(event, {{ $order->id }})" class="form-control"
+                            name="status" id="status">
+                            <option value="pending" @selected('pending' === $order->status)>pending</option>
+                            <option value="processing" @selected('processing' === $order->status)>processing</option>
+                            <option value="shipped" @selected('shipped' === $order->status)>shipped</option>
+                            <option value="delivered" @selected('delivered' === $order->status)>delivered</option>
+                            <option value="cancelled" @selected('cancelled' === $order->status)>cancelled</option>
+                        </select>
+                    </p>
                 </div>
                 <div class="col-md-6">
                     <p><strong>{{ __('Total') }}:</strong> ${{ number_format($order->total, 2) }}</p>
@@ -52,7 +51,7 @@
                     <tbody>
                         @forelse($order->order_items as $item)
                             <tr>
-                                <td>{{ $item->product->name }}</td>
+                                <td>{{ $item->product->trans_name }}</td>
                                 <td>{{ $item->quantity }}</td>
                                 <td>${{ number_format($item->price, 2) }}</td>
                                 <td>${{ number_format($item->quantity * $item->price, 2) }}</td>
@@ -106,14 +105,13 @@
 
     @push('js')
         <script>
-            function change_status(e) {
-                let value = e.target.value;
-                fetch('{{ route('change_status') }}/' + value)
-                .then(data => console.log(data))
-                .catch(err => console.error(err));
+            function change_status(e, order_id) {
+                let status = e.target.value;
 
-                // console.log('{{ route('change_status') }}/' + value);
-
+                fetch(`{{ url('/change_status') }}/${order_id}/${status}`)
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+                    .catch(err => console.error(err));
             }
         </script>
     @endpush

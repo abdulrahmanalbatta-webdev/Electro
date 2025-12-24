@@ -21,7 +21,7 @@ trait Trans
 
     function getTransDescriptionAttribute()
     {
-        return json_decode($this->description, true)[app()->getLocale()];
+        return json_decode($this->description, true)[app()->getLocale()] ?? '';
     }
 
     function getTransDescriptionEnAttribute()

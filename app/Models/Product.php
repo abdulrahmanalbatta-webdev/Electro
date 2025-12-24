@@ -4,13 +4,22 @@ namespace App\Models;
 
 use App\Traits\Trans;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    use Trans, SoftDeletes;
 
-    use Trans;
-
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'quantity',
+        'category_id',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 
     function category()
     {
@@ -41,6 +50,21 @@ class Product extends Model
     function order_items()
     {
         return $this->hasMany(OrderItems::class)->withDefault();
+    }
+
+    function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    function deletedBy()
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
     }
 
     function getImgPathAttribute()

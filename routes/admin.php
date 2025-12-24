@@ -5,6 +5,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -25,18 +26,18 @@ Route::prefix(LaravelLocalization::setLocale())->middleware(
         // 'isAdmin:admin'
     ]
 )->group(function () {
-    Route::get('/dashboard', function () {
-        return view('backend.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::get('/delete-image/{id?}', [ProductController::class, 'delete_image'])->name('delete_image');
+    Route::get('/products/restore/{id}', [ProductController::class, 'restore'])->name('products.restore');
+    Route::get('/products/force-delete/{id}', [ProductController::class, 'forceDelete'])->name('products.forceDelete');
     // Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
     Route::resource('orders', OrderController::class);
-    Route::get('/change_status/{status?}', [OrderController::class, 'change_status'])->name('change_status');
+    Route::get('/change_status/{order}/{status}', [OrderController::class, 'change_status'])->name('change_status');
     Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
     Route::get('/notifications', [AdminController::class, 'notifications'])->name('notifications');
     Route::resource('users', UserController::class);

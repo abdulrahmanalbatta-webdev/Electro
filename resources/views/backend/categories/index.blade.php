@@ -8,7 +8,7 @@
                         <tr>
                             <th>#</th>
                             <th>{{ __('Name') }}</th>
-                            <th>{{ __('Image') }}</th>
+                            {{-- <th>{{ __('Image') }}</th> --}}
                             <th>{{ __('Description') }}</th>
                             <th>{{ __('Products Count') }}</th>
                             <th>{{ __('Created At') }}</th>
@@ -21,7 +21,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $category->trans_name }}</td>
-                                <td><img src="{{ $category->img_path }}" alt="" width="80"></td>
+                                {{-- <td><img src="{{ $category->img_path }}" alt="" width="80"></td> --}}
                                 <td>{{ $category->trans_description }}</td>
                                 <td>{{ $category->products->count() }}</td>
                                 <td>{{ $category->created_at->diffForHumans() }}</td>

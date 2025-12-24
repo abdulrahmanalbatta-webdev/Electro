@@ -23,6 +23,6 @@ class Category extends Model
 
     function getImgPathAttribute()
     {
-        return asset('images/' . $this->image->path);
+        return asset('images/' . $this->image->path ?? '');
     }
 }

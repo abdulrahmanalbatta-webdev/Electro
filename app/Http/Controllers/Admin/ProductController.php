@@ -8,16 +8,39 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->paginate(10);
-        return view('backend.products.index', compact('products'));
+        $query = Product::with(['category', 'createdBy', 'updatedBy', 'deletedBy']);
+
+        // Filter by status
+        if ($request->has('status') && $request->status == 'trashed') {
+            $query->onlyTrashed();
+        }
+
+        // Filter by category
+        if ($request->has('category_id') && $request->category_id) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Filter by date range
+        if ($request->has('start_date') && $request->start_date) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+        if ($request->has('end_date') && $request->end_date) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        $products = $query->latest()->paginate(10);
+        $categories = Category::select('id', 'name')->get();
+
+        return view('backend.products.index', compact('products', 'categories'));
     }
 
     /**
@@ -64,6 +87,7 @@ class ProductController extends Controller
             'price' => $request->price,
             'quantity' => $request->quantity,
             'category_id' => $request->category_id,
+            'created_by' => Auth::id(),
         ]);
 
         // Add image an relation
@@ -100,7 +124,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        // return view('backend.products.show', compact('product'));
+        return view('backend.products.show', compact('product'));
     }
 
     /**
@@ -146,6 +170,7 @@ class ProductController extends Controller
             'price' => $request->price,
             'quantity' => $request->quantity,
             'category_id' => $request->category_id,
+            'updated_by' => Auth::id(),
         ]);
 
         // Add image an relation
@@ -188,11 +213,30 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $product->update(['deleted_by' => Auth::id()]);
+        $product->delete();
+
+        flash()->success(__("Product deleted successfully"));
+        return redirect()->back();
+    }
+
+    public function restore($id)
+    {
+        $product = Product::withTrashed()->findOrFail($id);
+        $product->restore();
+
+        flash()->success(__("Product restored successfully"));
+        return redirect()->back();
+    }
+
+    public function forceDelete($id)
+    {
+        $product = Product::withTrashed()->findOrFail($id);
+
         if ($product->image) {
             File::delete(public_path('images/' . $product->image->path));
             $product->image()->delete();
         }
-
 
         foreach ($product->gallery as $img) {
             File::delete(public_path('images/' . $img->path));
@@ -200,9 +244,9 @@ class ProductController extends Controller
 
         $product->image()->delete();
         $product->gallery()->delete();
-        $product->delete();
+        $product->forceDelete();
 
-        flash()->success(__("Category deleted successfully"));
+        flash()->success(__("Product permanently deleted successfully"));
         return redirect()->back();
     }
 
